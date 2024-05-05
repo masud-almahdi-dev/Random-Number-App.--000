@@ -1,11 +1,121 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .roboto-light {
+            font-family: "Roboto", sans-serif;
+            font-weight: 300;
+            font-style: normal;
+        }
+
+        .roboto-regular {
+            font-family: "Roboto", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        #number {
+            background-color: #ff3460;
+            color: white;
+            border: 0;
+            border-radius: 0.2em;
+            max-width: min-content;
+        }
+
+        #generated-numbers {
+            list-style-type: none;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 0.5em;
+            margin-top: 1.25em;
+            padding: 0;
+            li {
+                width: fit-content;
+                background-color: #ff3460;
+                color: white;
+                font-size: 2em;
+                border-radius: 0.2em;
+                padding: 0.45em 0.5em;
+            }
+        }
+    </style>
     <title>Random Number App</title>
 </head>
-<body>
-    
+
+<body class="roboto-regular">
+    <center>
+        <!-- A Stylish poster -->
+        <div style="margin-top: 4em;">
+            <h2>Random Number Generator</h2>
+        </div>
+        <div>
+            <!-- A number selector from 1 to 20 -->
+            <label for="number" style="padding: 0.5em 0.5em; font-size: 1.07em; border-bottom: 2px dashed black;">How Many Numbers You Want:</label>
+            <!-- If enter is pressed the generate function is called -->
+            <input type="number" id="number" class="roboto-light" value="6" min="1" max="20"
+                style="margin: 1em 0.5em; padding: 1em; font-size: xx-large;" onchange="generate()">
+        </div>
+        <div>
+            <!-- A big button to generate the numbers -->
+            <button onclick="generate()" class="roboto-light" style="padding: 1em; font-size: xx-large; border-radius: 0.2em;">Do!</button>
+        </div>
+        <!-- A place for alerts -->
+        <div id="alert">
+            <!-- A paragraph tag that only visible when error -->
+            <p style="border-bottom: 2px dashed black; max-width: fit-content; padding: 1em;">Final Number:</p>
+        </div>
+        <!-- A list of numbers -->
+        <div id="list">
+            <!-- A list of numbers is displayed here -->
+            <ul id="generated-numbers">
+
+            </ul>
+        </div>
+    </center>
+
 </body>
+<script>
+    //every time page is loaded the hue rotate value is changed
+    let vnum = document.getElementById("number");
+    let errordisplay = document.querySelector("#alert p");
+    let hueR = "hue-rotate(5deg)";
+    window.onload = function () {
+        hueR = "hue-rotate(" + Math.floor(Math.random() * 360) + "deg)";
+        document.getElementById("number").style.filter = hueR;
+        generate();
+    }
+    let generate = () => {
+        let vnum = document.getElementById("number");
+        if (vnum.value < 1 || vnum.value > 20) {
+            errordisplay.innerHTML = "Please enter a number between 1 and 20";
+        } else {
+            let list = document.querySelector("#generated-numbers");
+            list.innerHTML = "";
+            for (let i = 0; i < vnum.value; i++) {
+                list.innerHTML += `<li>${Math.floor(Math.random() * 9)}</li>`
+                // every child of list is hue rotated
+                list.children[i].style.filter = hueR;
+            }
+            // Add a copy button at the end of the list
+            list.innerHTML += `<button onclick="copy()" class="roboto-regular" style="padding: 0.5em 1em; margin-left: 0.5em; font-size: large; border-radius: 0.2em;">Copy</button>`
+        }
+    }
+    let copy = () => {
+        let list = document.querySelector("#generated-numbers");
+        let generatednumber = "";
+        for(let i = 0; i < list.children.length - 1; i++) {
+            // get the text of each child except the last one
+            generatednumber += list.children[i].innerText;
+        }
+        navigator.clipboard.writeText(generatednumber);
+    }
+</script>
+
 </html>
